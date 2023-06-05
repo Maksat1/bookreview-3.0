@@ -30,7 +30,6 @@ const Books = () => {
                 }
             </ul>
         </div>
-
     )
 }
 

@@ -85,26 +85,6 @@ const deleteBook = async (req, res, next) => {
     }
 }
 
-// Get book details based on author
-// const getBookByAuthor = async (req, res, next) => {
-//     const author = req.params.author
-//     let booksByAuthor
-//     try {
-//         const collection = await getBooksCollection()
-//         booksByAuthor = await collection.find({ author: author }).toArray()
-
-//         if (booksByAuthor.length === 0) {
-//             return `No books found for author ${author}`
-//         } else {
-//             return res.status(200).json(booksByAuthor)
-//         }
-//     } catch (err) {
-//         console.log(err)
-//     } finally {
-//         await client.close()
-//     }
-// }
-
 const addBook = async (req, res) => {
     try {
         const { isbn, title, author, image } = req.body
@@ -126,28 +106,8 @@ const addBook = async (req, res) => {
     // need to add check if the book is already in the database
 }
 
-// Get all books based on title
-// const getBookByTitle = async (req, res, next) => {
-//     const title = req.params.title
-//     let bookByTitle
-//     try {
-//         const collection = await getBooksCollection()
-//         const bookByTitle = await collection.findOne({title: title}) // Find all books with the specified title in the booksdb collection
-//         if (!bookByTitle) {
-//             throw new Error(`We have no book ${title}`)
-//         } else {
-//             return res.status(200).json(bookByTitle)
-//         }
-//     } catch (err) {
-//         console.log(err) //какая команда нужна чтобы выводить сообщение в браузер? или так и должно работать (в консоли)?
-//     } finally {
-//         await client.close() // Close the connection when finished
-//     }
-// }
-
 exports.getAllBooks = getAllBooks
 exports.addBook = addBook
-// exports.getBookByAuthor = getBookByAuthor
 exports.deleteBook = deleteBook
 exports.getBookById = getBookById
 exports.updateBook = updateBook

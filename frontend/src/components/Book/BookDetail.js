@@ -18,17 +18,10 @@ const BookDetail = () => {
             try {
                 const response = await axios.get(`http://localhost:5000/books/${id}`)
                 const data = response.data.bookById
-                console.log('Fetched data', data)
                 setInputs(data)
             } catch (error) {
                 console.error('Fetch error', error)
             }
-            // await axios
-            //     .get(`http://localhost:5000/books/${id}`)
-            //     // .then((res) => console.log(res, 'res'))
-            //     .then((res) => res.data)
-            //     .then((data) => setInputs(data))
-            // // .then((data) => console.log('data', data))
         }
         fetchHandler()
     }, [id])
@@ -42,29 +35,22 @@ const BookDetail = () => {
                 image: String(inputs.image),
                 isbn: Number(inputs.isbn),
             })
-            console.log('request sent: ', inputs)
         } catch (error) {
             console.error('request error', error)
         }
-        
-            // .then((res) => res.data)
     }
     const handleSubmit = async (e) => {
         e.preventDefault()
         await sendRequest()
         history('/books')
         return false
-        // sendRequest().then(() => history('/books'))
     }
     const handleChange = (e) => {
         setInputs((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value,
         }))
-        // 
-        // console.log(e.target, 'eeeee')
     }
-    // console.log('inputs', inputs)
     return (
         <div>
             {inputs ? (

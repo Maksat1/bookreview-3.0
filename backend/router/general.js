@@ -42,10 +42,9 @@ public_users.post("/register", async (req,res) => {
 // localhost:5000/books
 public_users.get('/', booksController.getAllBooks)
 public_users.post('/', booksController.addBook)
-// localhost:5000/books/author/:author
-// public_users.get('/author/:author', booksController.getBookByAuthor)
+// localhost:5000/books/:id
 public_users.delete('/:id', booksController.deleteBook)
 public_users.get('/:id', booksController.getBookById)
 public_users.put('/:id', booksController.updateBook)
-// module.exports.general = public_users
+
 module.exports = public_users
