@@ -61,7 +61,6 @@ try {
   }
 }
 
-//only registered users can login
 //url localhost:5000/customer/login
 regd_users.post("/login", async (req,res) => { 
   const username = req.body.username
@@ -86,58 +85,6 @@ regd_users.post("/login", async (req,res) => {
     return res.status(200).send("User successfully logged in")
   } else {
     return res.status(208).json({message: "Invalid Login. Check username and password"});
-  }
-})
-
-// Add a book review, only registered users can add reviews
-// url localhost:5000/customer/auth/review/:isbn
-regd_users.put("/auth/review/:isbn", async (req, res) => {
-  const isbn = req.params.isbn
-  const review_username = req.session.authorization.username
-  const review_text = req.body.review_text
-
-  try {
-    await client.connect() // Connect to the MongoDB cluster
-    const collection = client.db("booksdb").collection("booksdb") // Access the books collection
-    const book = await collection.findOne({ isbn: isbn })
-
-    if (!book.reviews) {
-      book.reviews = {}
-    }
-    book.reviews[review_username] = review_text
-
-    await collection.updateOne({ isbn: isbn }, {$set: {reviews: book.reviews } })
-    res.json({ message: "Review added successfully" })
-  } catch (err) {
-    console.log(err)
-    res.status(500).json({message: 'Failet to add reivew'})
-  }
-})
-
-// delete review of the logged in user
-regd_users.delete("/auth/review/:isbn", async (req,res) => {
-  const isbn = req.params.isbn
-  const username = req.session.authorization.username
-  
-  try {
-    await client.connect()
-    const collection = client.db("booksdb").collection("booksdb") // Access the books collection
-    const book = await collection.findOne({ isbn: isbn })
-    
-    if (book.reviews[username]) {
-      console.log(book.reviews[username])
-      let keyToDelete = username
-      const unsetQuery = {};
-      unsetQuery[`reviews.${keyToDelete}`] = 1;
-      await collection.updateOne({ isbn: isbn }, { $unset: unsetQuery });
-      const updatedBook = await collection.findOne({ isbn: isbn });
-            
-      res.send(updatedBook.reviews)
-    } else {
-      res.send(`User ${username} didn\'t wrote any reviews for this book`)
-    }
-  } catch (err) {
-    console.log(err)
   }
 })
 

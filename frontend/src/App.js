@@ -1,42 +1,27 @@
-import React, { useState, useEffect } from 'react'
-const API_ENDPOINT = 'http://localhost:5000/books'
+import React from "react";
+import Header from "./components/Header";
+import { Route, Routes } from "react-router-dom";
+import Home from "./components/Home";
+import AddBook from "./components/AddBook";
+import Books from "./components/Book/Books";
+import BookDetail from "./components/Book/BookDetail";
 
 function App() {
-  const [books, setBooks] = useState([]);
-  
-  useEffect(() => {
-    console.log('use effect hook triggered')
-
-    fetch(API_ENDPOINT)
-      .then(response => response.json())
-      .then(data => {
-        console.log('API endpoint called successfully')
-        setBooks(data)
-      })
-      .catch(error => console.log(error));
-  }, []);
-
-  console.log('Component rendered')
   return (
-    <div>
-      <h1>Book List</h1>
-      <ul>
-        {books.map(book => (
-          <li key={book._id}>
-            <h3>{book.title}</h3>
-            <p>{book.author}</p>
-            <ul>
-              {Object.entries(book.reviews).map(([key, value]) => (
-                <li key={key}>
-                  <strong>Review {key}:</strong> {value}
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <React.Fragment>
+    <header>
+      <Header />
+    </header>
+    <main>
+      <Routes>
+        <Route path="/" element={<Home />} exact />
+        <Route path="/add" element={<AddBook />} exact />
+        <Route path="/books" element={<Books />} exact />
+        <Route path="/books/:id" element={<BookDetail />} exact />
+      </Routes>
+    </main>
+    </React.Fragment>
   );
 }
 
-export default App
+export default App;

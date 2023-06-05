@@ -4,15 +4,21 @@ const express = require('express')
 const jwt = require('jsonwebtoken')
 const session = require('express-session')
 const customer_routes = require('./router/auth_users.js').authenticated
-const genl_routes = require('./router/general.js').general
+const router = require('./router/general')
 const cors = require('cors')
-// const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.wpvcli3.mongodb.net/?retryWrites=true&w=majority`
+const mongoose = require("mongoose")
 
 const app = express()
 
+//Middlewares
 app.use(express.json())
-app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUninitialized: true}))
 app.use(cors())
+app.use('/books', router)
+app.use("/customer", customer_routes)
+app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUninitialized: true}))
+// app.use('/', (req, res, next) => {
+//     res.send('starting server')
+// })
 
 // mw функция, которая выполняется для всех маршрутов, начинающихся с customer/auth
 // Для проверки аутентиикации пользователя перед обработкой запроса
@@ -37,11 +43,16 @@ app.use("/customer/auth/*", function auth(req,res,next){
     } else {
         return res.status(403).json({message: "User not logged in"})
     }
-})
+})   
 
 const PORT =5000
 
-app.use("/customer", customer_routes)
-app.use("/", genl_routes)
-
-app.listen(PORT,()=>console.log("Server is running"))
+mongoose
+  .connect(
+    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.wpvcli3.mongodb.net/?retryWrites=true&w=majority`
+    )
+    .then(() => console.log("Connected to DataBase"))
+    .then(() => {
+        app.listen(PORT)
+    })
+    .catch((err) => console.log(err))
